@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>A Starters' Guide To Structuring Go Projects by Artur Kondas</title>
+		<meta name="description" content="A step-by-step guide on how to structure your Go project, no matter how big.">
+		<meta name="author" content="Artur kondas">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/night.css" id="theme">
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="plugin/highlight/gruvbox.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>A Starter's Guide To Go Projects</h1>
+					<p>
+            by <a href="github.com/youshy">Artur Kondas</a>
+					</p>
+				</section>
+
+				<section id="fragments">
+          <h2>Table of contents</h2>
+          <ul style="font-size:25px">
+            <li class="fragment">Why should I even care?</li>
+            <li class="fragment">How big players do it?</li>
+            <li class="fragment">How I can do it?</li>
+            <li class="fragment">Example: Small API</li>
+          </ul>
+				</section>
+
+				<section>
+					<h2>Why should I even care?</h2>
+				</section>
+
+        <section id="fragments">
+          <h3>Chances are you've said some of these things before:</h3>
+          <ul>
+            <li class="fragment">I don't want to do anything specific with this package...</li>
+            <li class="fragment">I just want to test some things...</li>
+            <li class="fragment">I don't care about it, because it's a private repo...</li>
+          </ul>
+        </section>
+
+
+        <section id="fragments">
+          <h3>But what if this code will turn your life around?</h3>
+          <p class="fragment">Before we answer all the burning questions, let's check how big players structure their code</p>
+        </section>
+
+        <section data-background-image="assets/images/project-standards.png">
+          <div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+            <h2>Project Layout by Golang Standards</h2>
+            <p>Most probably if you start Googling the topic, you'll find this repo first. This is the most popular way of structuring the content in Go projects.</p>
+          </div>
+        </section>
+
+        <section data-background-image="assets/images/kubernetes.png">
+          <div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+            <h2>Kubernetes</h2>
+          </div>
+        </section>
+
+        <section data-background-image="assets/images/terraform.png">
+          <div style="position: absolute; width: 40%; right: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.5), 0 5px 25px rgba(0,0,0,0.2); background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px; font-size: 20px; text-align: left;">
+            <h2>Terraform</h2>
+            <p>Can you see any pattern?</p>
+          </div>
+        </section>
+
+        <section id="fragments">
+          <p>As you can see, a lot of these repositories are very similar in the structure.</p>
+          <p class="fragment">Does it mean it's the only valid way?</p>
+        </section>
+
+        <section>
+          <h2>Let's think about our projects</h2>
+          <p>How to tackle the structure depending on the initial size</p>
+				</section>
+
+        <section>
+          <section>
+          <h3>1. Flat Structure</h3>
+            <p>Best for</p>
+            <ol style="font-size:25px">
+              <li>Small projects</li>
+              <li>Testing ideas</li>
+              <li>Packages</li> 
+            </ol>
+          </section>
+          <section>
+            <h4>How should it look?</h4>
+            <p>Small project and testing ideas</p>
+            <pre>
+              <code class="hljs shell" data-trim>
+                |
+                | go.mod 
+                | go.sum
+                | main.go
+                | functionality.go
+                | functionality_test.go
+                | /assets
+                | README.md
+                |
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p>Packages</p>
+            <pre>
+              <code class="hljs shell" data-trim>
+                |
+                | go.mod 
+                | go.sum
+                | package.go
+                | package_test.go
+                | functionality.go
+                | functionality_test.go
+                | README.md
+                |
+              </code>
+            </pre>
+          </section>
+        </section>
+        <section class="fragments">
+          <ul style="font-size:30px">
+            <li>Try to steer away from using <span style="color:orange">utils.go</span>, most of the time it'll end up being a mess. As much as this is counter-intuitive, it'll make you think about the overall structure of the app.</li>
+            <li class="fragment">If your files are getting awfully big, split them into multiple ones grouped by functionality. For example: <span style="color:orange">postgres.go</span>, <span style="color:orange">json.go</span>.</li>
+            <li class="fragment">Also, think about <span style="color:orange">README.md</span> from the very beginning. Good documentation will save you multiple times!</li>
+          </ul>
+        </section>
+
+        <section>
+          <section>
+            <h3>2. Main app and packages</h3>
+            <p>Best for</p>
+            <ul>
+              <li>Basically anything else</li>
+            </ul>
+          </section>
+          <section>
+            <h4>Before diving into this, ask yourself one question:</h4>
+            <p>Will the packages be reused across other apps?</p>
+          </section>
+          <section>
+            <p>If yes, it makes a perfect sense to split them to separate repositories</p>
+            <p>If no, then we can follow the <strong>Big Players</strong> setup</p>
+          </section>
+          <section>
+            <div style="display:flex;justify-content:space-around;flex-flow:row;align-items:center"> 
+              <div>
+                <pre>
+                  <code class="hljs shell" data-trim>
+                    |
+                    | /pkg
+                    | /build
+                    | /examples
+                    | go.mod 
+                    | go.sum
+                    | main.go
+                    | README.md
+                    |
+                  </code>
+                </pre>
+              </div>
+              <div style="font-size:20px">
+                <ul>
+                  <li>Keep the source code directories as simple as possible, don't create all folders at once - extend only when you need</li>
+                  <li>Use <span style="color:orange">/pkg</span> for all packages used in the application only;</li>
+                  <li>Use <span style="color:orange">/build</span> for any build scripts;</li>
+                  <li><span style="color:orange">/examples</span> should be used if your app has some very specific functionality you want to highlight;</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p>Go was created as an alternative to big C++/Java apps. <strong>Treat it like that!</strong></p>
+          </section>
+          <section>
+            <p>If you can keep it simple - do it.</p>
+          </section>
+          <section>
+            <p>You don't have to structure your Go code in the same way as Kubernetes or Docker does.</p>
+            <p>That's their use case - think in baby steps and expand as you <strong>Go</strong>.</p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Example: Small API</h2>
+          </section>
+          <section>
+            <h4>Requirements:</h4>
+            <ul style="font-size:25px">
+              <li>Logger and Database connector is reused in other apps</li>
+              <li>Keys validator is used only in the API</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <p style="text-align:left">Main app</p>
+            <div style="display:flex;flex-flow:row;justify-content:space-evenly"> 
+            <div style="width:50%">
+              <pre>
+                <code class="hljs shell" data-trim>
+                    | /pkg
+                    |   /app
+                    |     app.go
+                    |     app_test.go
+                    |     handlers.go
+                    |     handlers_test.go
+                    |   /keys
+                    |     keys.go
+                    |     keys_test.go
+                    | /build
+                    |   dockerfile
+                    |   docker-compose.yml
+                    | go.mod 
+                    | go.sum
+                    | main.go
+                    | README.md
+                </code>
+              </pre>
+            </div>
+              <div style="font-size:20px;width:30%">
+                <ul>
+                  <li>
+                    <div>
+                    <span style="color:orange">/app</span> is the main directory for the application with it's logic. 
+                    </div>
+                    <div>
+                    <span style="color:orange">app.go</span> holds the app startup logic, router and db initialisation.
+                    </div>
+                    <p>
+                    <span style="color:orange">handlers.go</span> as the name says, is the API handlers logic.
+                    </p>
+                  </li>
+                  <li><span style="color:orange">keys.go</span> is the package that will check the environment setup before the application runs. This is a very specific use-case!</li>
+                  <li><span style="color:orange">/build</span> holds all the files required for any type of build.</li>
+                  <li><span style="color:orange">main.go</span> in this case contains only the barebones required for the application starup</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <section>
+            <p style="text-align:left">main.go</p>
+            <pre>
+              <code class="hljs go" data-trim data-line-numbers="|11-15|16|17-20|21-24">
+package main
+
+import (
+  "log"
+
+  "github.com/account/app/pkg/app"
+  "github.com/account/app/pkg/keys"
+)
+
+func main() {
+  keys.Check(keys.Keys{
+    App:      true,
+    Postgres: true,
+    Logger:   true,
+  })
+  a := app.App{}
+  err := a.Initialize()
+  if err != nil {
+    log.Fatal(err)
+  }
+  err := a.Run()
+  if err != nil {
+    log.Fatal(err)
+  }
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p style="text-align:left">app.go</p>
+            <pre>
+              <code class="hljs go" data-trim data-line-numbers="|8-11|13-19">
+package app
+
+import (
+  "github.com/gofrs/uuid"
+  "github.com/gorilla/mux"
+)
+
+type App struct {
+  Router   *mux.Router
+  Database Database
+}
+
+type Database interface {
+  LoginUser(email string) (types.User, error)
+  GetUser(userId uuid.UUID) (types.User, error)
+  CreateUser(user types.User) error
+  ModifyUser(user types.User) error
+  DeleteUser(userId uuid.UUID) error
+}
+              </code>
+            </pre>
+          </section>
+          <section>
+            <p style="text-align:left">handlers.go</p>
+            <pre>
+              <code class="hljs go" data-trim data-line-numbers="|11-15">
+func (a *App) UserGet() http.Handler {
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    uid, err := uuid.FromString(vars["user_id"])
+    if err != nil {
+      JSONResponse(w, http.StatusBadRequest, payload)
+      return
+    }
+    defer r.Body.Close()
+
+    user, err := a.Database.GetUser(uid)
+    if err != nil {
+      JSONResponse(w, http.StatusBadRequest, payload)
+      return
+    }
+
+    JSONResponse(w, http.StatusOK, payload)
+  })
+}
+              </code>
+            </pre>
+          </section>
+
+          <section>
+            <p style="text-align:left">Logger</p>
+            <div style="display:flex;flex-flow:row;justify-content:space-evenly;align-items:center"> 
+            <div style="width:50%">
+              <pre>
+                <code class="hljs shell" data-trim>
+                    | go.mod 
+                    | go.sum
+                    | logger.go
+                    | README.md
+                </code>
+              </pre>
+            </div>
+              <div style="font-size:20px;width:30%">
+                <p><span style="color:orange">logger.go</span> is basically a wrapper around <a href="https://pkg.go.dev/go.uber.org/zap?tab=doc">Uber's Zap</a> with some of my custom setup, depending on the stack.</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <p style="text-align:left">Database</p>
+            <div style="display:flex;flex-flow:row;justify-content:space-evenly"> 
+            <div style="width:50%">
+              <pre>
+                <code class="hljs shell" data-trim>
+                    | go.mod 
+                    | go.sum
+                    | database.go
+                    | user.go
+                    | README.md
+                </code>
+              </pre>
+            </div>
+              <div style="font-size:20px;width:30%">
+                <ul>
+                  <li><span style="color:orange">database.go</span> holds all the logic for initial database connection - in Postgres' case it'd build the connection string and build some functions for checking if the database is alive.</li>
+                  <li><span style="color:orange">user.go</span> holds the functions that will fetch the data from the database and return it in a proper fashion to the application for handlers to return it to the user.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="fragments">
+          <h3>In Conclusion</h3>
+          <ul style="font-size:30px">
+            <li class="fragment">Expand as you Go, don't overthink it from the start</li>
+            <li class="fragment">Use the structure that makes sense for your app</li>
+            <li class="fragment">Think about the overall architecture</li>
+            <li class="fragment">Have fun!</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 style="text-align:left">About Me</h2>
+          <div style="display:flex;flex-flow:row;justify-content:space-evenly">
+            <div>
+              <p>Go Engineer @ <a href="https://ecs.co.uk/" target="_blank">ECS Digital</a></p>
+              <p style="text-align:left">Find Me:</p>
+              <ul>
+                <li><a href="https://twitter.com/arturkondas" target="_blank">Twitter - @arturkondas</a></li>
+                <li><a href="https://linkedin.com/in/arturkondas" target="_blank">Linkedin - @arturkondas</a></li>
+                <li><a href="https://akondas.com" target="_blank">Blog - akondas.com</a></li>
+              </ul>
+            </div>
+            <div>
+              <img src="https://avatars3.githubusercontent.com/u/21032478?s=460&u=2373849e0bfdaf312ab372d681532c6a94f25be2&v=4" alt="Me">
+            </div>
+          </div>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+
+	</body>
+</html>
